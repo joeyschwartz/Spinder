@@ -1,31 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import MainPage from './mainPage';
 import Login from './login';
-import * as Spotify from './fetch';
+import axios from 'axios';
+// import * as Spotify from './fetch';
 
 function App() {
-  useEffect( () => {
-    const asyncFetch = async() => {
-      const response = await fetch('/createPlaylist', {
-        method: "POST"
-      })
-        try {
-          console.log(`got response, `, response);
-      }
-      catch(err){
-          console.log(err)
-      }
-    }
-    asyncFetch();
-    // const recs = Spotify.getRecommendations('pop').then((data) =>
-    //   console.log('DATA: ', data)
-    // );
-    // console.log('cookies', recs);
-    // const recs = Spotify.getUser().then((data) => {
-    //   console.log('getUser data: ', data);
-    // });
-  }, []);
-
   // A state that represents if user is logged in
   const [loggedIn, setLoggedIn] = useState(false);
   // Function that changes login status
@@ -41,3 +20,15 @@ function App() {
 }
 
 export default App;
+
+// //returns song recommendations onClick
+// useEffect(() => {
+//   axios.defaults.withCredentials = true; // not what youre supposed to do
+//   const recs = axios
+//     .post('http://localhost:3000/getSongRecs', { genre: 'pop' })
+//     .then((data) => console.log('Tracklist: ', data.data.tracks));
+//   console.log('cookies', recs);
+//   // const recs = Spotify.getUser().then((data) => {
+//   //   console.log('getUser data: ', data);
+//   // });
+// }, []);
