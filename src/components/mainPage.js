@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Card from './card';
 
@@ -11,30 +11,42 @@ export default function MainPage(props) {
   //this will be populated by the post request
   const tracksList = [];
 
-  const [genre, setGenre] = useState('');
+  const [userGenre, setGenre] = useState('');
   const [trackList, setTracklist] = useState([]);
 
-  function handleOnChange(e) {
-    setGenre(e.target.value);
-    console.log('genre', genre);
-  }
+  // const state = {
+  //   [{artistName:
+  //   trackID: //this will be used later in the form of an array of trackIDs to create the playlist on api request
+  //   trackURI:
+  //   albumArtwork:}
+  //   ]
+  // }
 
-  useEffect(() => {
+  const inputRef = useRef(null); // create a ref for the input field
+
+  function handleOnChange(e) {
+    //change to onclick for input field
+    const newGenre = inputRef.current.value; // get the value of the input field using the ref
+    setGenre(newGenre);
+    console.log('genre', userGenre);
+
+    // useEffect(() => {
     axios.defaults.withCredentials = true; // not what youre supposed to do
     //probably need to pass in headers
     const recs = axios
-      .post('http://localhost:3000/getSongRecs', { genre: genre })
+      .post('http://localhost:3000/getSongRecs', { genre: userGenre })
       .then((data) => console.log('Tracklist: ', data.data.tracks));
-  }, [genre]);
-  //^^^ can add a conditional to check to see if submit has been entered or not before checking genre changes
+    // }, [genre]);
+    //^^^ can add a conditional to check to see if submit has been entered or not before checking genre changes
+  }
 
   return (
     //div for flex container
     <div id="main-page-container">
       {/* //input tag */}
       <div className="container1" id="searchbar">
-        <input onChange={handleOnChange} placeholder="Enter Genre here"></input>
-        <button id="searchbutton" onClick={props.getRecommendations}>
+        <input ref={inputRef} placeholder="Enter Genre here"></input>
+        <button onClick={handleOnChange} id="searchbutton">
           Search
         </button>
       </div>
