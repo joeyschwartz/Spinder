@@ -11,7 +11,7 @@ import * as Spotify from './fetch';
 //   'https://picsum.photos/404/604',
 // ];
 
-export default function Card(props) {
+export default function Card({ trackList }) {
   //add the fetch functions here
   const [lastDirection, setLastDirection] = useState();
 
@@ -23,28 +23,33 @@ export default function Card(props) {
   const outOfFrame = (name) => {
     console.log((name = 'left the screen!'));
   };
+  console.log('Tracklist: ', trackList);
+
+  const tinderCards = trackList.map((track) => {
+    return (
+      <TinderCard
+        flickOnSwipe
+        className="swipe"
+        key={track.trackUri}
+        onSwipe={(dir) => swiped(dir, track.albumImg.url)}
+        onCardLeftScreen={() => outOfFrame(track.albumImg.url)}
+        preventSwipe={['up', 'down']}
+      >
+        <div
+          className="card container1"
+          style={{ backgroundImage: `url(${track.albumImg.url})` }}
+        ></div>
+        {/* <p>{props.trackList}</p> */}
+        <button id="playButton">Play</button>
+      </TinderCard>
+    );
+  });
+
+  console.log('tinderCards, ', tinderCards);
 
   return (
     <div className="cardContainer">
-      {props.images.map((img) => {
-        return (
-          <TinderCard
-            flickOnSwipe
-            className="swipe"
-            key={img}
-            onSwipe={(dir) => swiped(dir, img)}
-            onCardLeftScreen={() => outOfFrame(img)}
-            preventSwipe={['up', 'down']}
-          >
-            <div
-              className="card container1"
-              style={{ backgroundImage: `url(${img})` }}
-            ></div>
-            <p>{props.trackList}</p>
-            <button id="playButton">Play</button>
-          </TinderCard>
-        );
-      })}
+      {trackList.length > 0 && <div>{tinderCards}</div>}
     </div>
   );
 }
