@@ -39,12 +39,9 @@ export default function MainPage(props) {
   console.log('state: ', trackList);
 
   return (
-    //div for flex container
     <div id="main-page-container">
-      {/* //input tag */}
       <div className="container1" id="searchbar">
         <input
-          // value={userGenre}
           onChange={handleOnChange}
           ref={inputRef}
           placeholder="Enter Genre here"
@@ -53,8 +50,7 @@ export default function MainPage(props) {
           Search
         </button>
       </div>
-      <Card trackList={trackList} />
-      {/* //link button for playlist? */}
+      <Card trackList={trackList} setTrackList={setTracklist} />
     </div>
   );
 }
