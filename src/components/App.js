@@ -20,15 +20,3 @@ function App() {
 }
 
 export default App;
-
-// //returns song recommendations onClick
-// useEffect(() => {
-//   axios.defaults.withCredentials = true; // not what youre supposed to do
-//   const recs = axios
-//     .post('http://localhost:3000/getSongRecs', { genre: 'pop' })
-//     .then((data) => console.log('Tracklist: ', data.data.tracks));
-//   console.log('cookies', recs);
-//   // const recs = Spotify.getUser().then((data) => {
-//   //   console.log('getUser data: ', data);
-//   // });
-// }, []);
