@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useSpring, animated } from '@react-spring/web';
 import TinderCard from 'react-tinder-card';
+import { Howl, Howler } from 'howler';
 
-// const images = [
-//   'https://picsum.photos/400/600',
-//   'https://picsum.photos/401/601',
-//   'https://picsum.photos/402/602',
-//   'https://picsum.photos/403/603',
-//   'https://picsum.photos/404/604',
-// ];
+export default function Card({ trackList, setTrackList }) {
+  // initialize sound as null w/ useRef
+  let sound = useRef(null);
+  let isPlaying = useRef(false);
 
-export default function Card({ trackList }) {
   //add the fetch functions here
   // const [lastDirection, setLastDirection] = useState();
   const [trackArray, addTrack] = useState([]);
@@ -23,13 +20,49 @@ export default function Card({ trackList }) {
       const newTrackArray = [...trackArray, trackUri];
       addTrack(newTrackArray);
     }
+    if (isPlaying === true) {
+      sound.stop();
+    }
+
+    isPlaying = false;
   };
+
   console.log('TRACK ARRAY: ', trackArray);
 
   const outOfFrame = (name) => {
-    console.log((name = 'left the screen!'));
+    // check to see if name exists in trackList, if YES, pop it off
+    let nameFound = false;
+
+    for (const element of trackList) {
+      if (element.trackUri === name) {
+        nameFound = true;
+      }
+    }
+
+    if (nameFound === true) {
+      setTrackList((prevTrackList) => {
+        const newTrackList = prevTrackList.slice();
+        newTrackList.pop();
+        return newTrackList;
+      });
+    }
   };
-  console.log('Tracklist: ', trackList);
+
+  const playSong = (previewUrl) => {
+    if (isPlaying !== true) {
+      isPlaying = true;
+      //do some howler stuff
+      const { Howl, Howler } = require('howler');
+
+      sound = new Howl({
+        src: [previewUrl + '.mp3'],
+        html5: true,
+        volume: 0.25,
+      });
+
+      sound.play();
+    }
+  };
 
   const tinderCards = trackList.map((track) => {
     return (
@@ -38,7 +71,7 @@ export default function Card({ trackList }) {
         className="swipe"
         key={track.trackUri}
         onSwipe={(dir) => swiped(dir, track.trackUri)}
-        onCardLeftScreen={() => outOfFrame(track.albumImg.url)}
+        onCardLeftScreen={() => outOfFrame(track.trackUri)}
         preventSwipe={['up', 'down']}
       >
         <div
@@ -46,12 +79,12 @@ export default function Card({ trackList }) {
           style={{ backgroundImage: `url(${track.albumImg.url})` }}
         ></div>
         {/* <p>{props.trackList}</p> */}
-        <button id="playButton">Play</button>
+        <button onClick={() => playSong(track.previewUrl)} id="playButton">
+          Play
+        </button>
       </TinderCard>
     );
   });
-
-  console.log('tinderCards, ', tinderCards);
 
   return (
     <div className="cardContainer">
